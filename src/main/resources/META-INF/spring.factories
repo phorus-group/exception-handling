@@ -1,0 +1,7 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  group.phorus.exception.handling.config.WebfluxValidatorConfig,\
+  group.phorus.exception.handling.handlers.WebfluxExceptionHandler,\
+  group.phorus.exception.handling.handlers.RestExceptionHandler
+
+org.springframework.boot.env.EnvironmentPostProcessor=\
+ group.phorus.exception.handling.config.PostProcessorConfig

@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "group.phorus"
-description = "Library with common functions for recording metrics."
+description = "Library containing common Spring WebFlux exception handling logic."
 version = "1.0.2"
 
 java {

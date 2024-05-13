@@ -52,8 +52,8 @@ Feature: Validation errors are handled and a custom message is sent to the clien
     When the external service calls the "/v1/test" endpoint
     Then the service returns HTTP 400
     And the service returns a message with the validation errors
-      | obj        | field         | rejectedValue | message        |
-      | testObject | subObjectList | null          | Cannot be null |
+      | obj        | field         | rejectedValue | message         |
+      | testObject | subObjectList | null          | Cannot be empty |
 
   Scenario: Caller with a blank subfield that cannot be blank
     Given the caller has a blank subfield that cannot be blank

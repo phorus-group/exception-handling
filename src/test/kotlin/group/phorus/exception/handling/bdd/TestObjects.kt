@@ -23,7 +23,6 @@ data class TestObject(
 
     @field:Valid
     @field:NotEmpty(message = "Cannot be empty")
-    @field:NotNull(message = "Cannot be null")
     val subObjectList: List<TestSubObject>? = null,
 )
 

@@ -1,7 +1,7 @@
 package group.phorus.exception.handling.handlers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import group.phorus.userservice.exceptions.BaseException
+import group.phorus.exception.handling.BaseException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
 import org.springframework.http.HttpStatus

@@ -1,6 +1,6 @@
 package group.phorus.exception.handling.handlers
 
-import group.phorus.userservice.exceptions.BaseException
+import group.phorus.exception.handling.BaseException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import java.util.concurrent.TimeoutException
-import javax.validation.ConstraintViolationException
+import jakarta.validation.ConstraintViolationException
 
 
 @RestControllerAdvice

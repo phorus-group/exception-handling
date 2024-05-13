@@ -4,14 +4,13 @@ import group.phorus.exception.handling.bdd.RequestScenarioScope
 import group.phorus.exception.handling.bdd.ResponseScenarioScope
 import group.phorus.exception.handling.bdd.TestObject
 import group.phorus.exception.handling.bdd.TestSubObject
-import group.phorus.userservice.exceptions.BadRequest
+import group.phorus.exception.handling.BadRequest
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.returnResult
 
 
 class BaseStepsDefinition(

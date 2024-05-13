@@ -11,8 +11,8 @@ import org.springframework.core.*
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
-import javax.validation.ClockProvider
-import javax.validation.ParameterNameProvider
+import jakarta.validation.ClockProvider
+import jakarta.validation.ParameterNameProvider
 import kotlin.reflect.jvm.kotlinFunction
 
 /**
@@ -35,13 +35,12 @@ class WebfluxValidatorConfig {
 
 class CustomLocalValidatorFactoryBean : LocalValidatorFactoryBean() {
     override fun getClockProvider(): ClockProvider = DefaultClockProvider.INSTANCE
-    override fun postProcessConfiguration(configuration: javax.validation.Configuration<*>) {
+    override fun postProcessConfiguration(configuration: jakarta.validation.Configuration<*>) {
         super.postProcessConfiguration(configuration)
 
         val discoverer = PrioritizedParameterNameDiscoverer()
         discoverer.addDiscoverer(SuspendAwareKotlinParameterNameDiscoverer())
         discoverer.addDiscoverer(StandardReflectionParameterNameDiscoverer())
-        discoverer.addDiscoverer(LocalVariableTableParameterNameDiscoverer())
 
         val defaultProvider = configuration.defaultParameterNameProvider
         configuration.parameterNameProvider(object : ParameterNameProvider {

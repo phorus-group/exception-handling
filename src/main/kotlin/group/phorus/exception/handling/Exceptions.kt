@@ -1,4 +1,4 @@
-package group.phorus.userservice.exceptions
+package group.phorus.exception.handling
 
 import org.springframework.http.HttpStatus
 

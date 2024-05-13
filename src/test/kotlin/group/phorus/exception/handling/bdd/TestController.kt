@@ -1,6 +1,6 @@
 package group.phorus.exception.handling.bdd
 
-import group.phorus.userservice.exceptions.*
+import group.phorus.exception.handling.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
 
 @RestController
 @Validated

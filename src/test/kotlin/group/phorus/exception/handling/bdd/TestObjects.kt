@@ -1,10 +1,10 @@
 package group.phorus.exception.handling.bdd
 
-import group.phorus.userservice.exceptions.BaseException
-import javax.validation.Valid
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
+import group.phorus.exception.handling.BaseException
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
 
 data class TestException(
     val exception: BaseException? = null,

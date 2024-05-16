@@ -48,8 +48,8 @@ class RestExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> {
-        val apiError = if (ex.message?.contains("Unique index or primary key violation") == true) {
-            ApiError(HttpStatus.BAD_REQUEST, "Unique constraint violation")
+        val apiError = if (ex.message?.contains("index|unique|constraint|violation".toRegex()) == true) {
+            ApiError(HttpStatus.BAD_REQUEST, "Validation error")
         } else ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: HttpStatus.INTERNAL_SERVER_ERROR.name)
 
         return ResponseEntity(apiError, apiError.status)

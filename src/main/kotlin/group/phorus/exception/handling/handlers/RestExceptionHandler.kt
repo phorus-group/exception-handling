@@ -26,13 +26,8 @@ class RestExceptionHandler {
     @ExceptionHandler(ConstraintViolationException::class)
     protected fun handleConstraintViolation(ex: ConstraintViolationException): ResponseEntity<Any> =
         ApiError(HttpStatus.BAD_REQUEST, "Validation error")
-            .apply {
-                addValidationErrors(ex.constraintViolations)
-            }
-            .let {
-                println(it)
-                ResponseEntity(it, it.status)
-            }
+            .apply { addValidationErrors(ex.constraintViolations) }
+            .let { ResponseEntity(it, it.status) }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
     protected fun handleMethodArgumentTypeMismatch(ex: MethodArgumentTypeMismatchException): ResponseEntity<Any> =
@@ -52,7 +47,11 @@ class RestExceptionHandler {
             .let { ResponseEntity(it, it.status) }
 
     @ExceptionHandler(Exception::class)
-    protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> =
-        ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: HttpStatus.INTERNAL_SERVER_ERROR.name)
-            .let { ResponseEntity(it, it.status) }
+    protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> {
+        val apiError = if (ex.message?.contains("Unique index or primary key violation") == true) {
+            ApiError(HttpStatus.BAD_REQUEST, "Unique constraint violation")
+        } else ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: HttpStatus.INTERNAL_SERVER_ERROR.name)
+
+        return ResponseEntity(apiError, apiError.status)
+    }
 }

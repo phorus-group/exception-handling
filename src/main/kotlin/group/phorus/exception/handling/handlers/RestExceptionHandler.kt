@@ -50,6 +50,8 @@ class RestExceptionHandler {
     protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> {
         val apiError = if (ex.message?.contains("index|unique|constraint|violation".toRegex()) == true) {
             ApiError(HttpStatus.BAD_REQUEST, "Validation error")
+        } else if (ex.message?.contains("No property .* found for type".toRegex()) == true) {
+            ApiError(HttpStatus.BAD_REQUEST, ex.message)
         } else ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: HttpStatus.INTERNAL_SERVER_ERROR.name)
 
         return ResponseEntity(apiError, apiError.status)

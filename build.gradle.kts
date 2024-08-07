@@ -8,8 +8,8 @@ import java.time.LocalDate
 plugins {
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("plugin.spring") version "2.0.0"
-    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.spring") version "2.0.10"
+    kotlin("jvm") version "2.0.10"
     id("org.jetbrains.dokka").version("1.9.20")
     id("io.github.gradle-nexus.publish-plugin").version("2.0.0")
     id("com.kageiit.jacobo") version "2.1.0"

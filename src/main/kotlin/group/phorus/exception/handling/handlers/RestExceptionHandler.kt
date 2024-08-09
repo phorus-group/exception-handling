@@ -48,7 +48,9 @@ class RestExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> {
-        val apiError = if (ex.message?.contains("index|unique|constraint|violation".toRegex()) == true) {
+        val apiError = if (ex.message?.contains("unique") == true) {
+            ApiError(HttpStatus.CONFLICT, "A conflict with a unique field was found")
+        } else if (ex.message?.contains("index|unique|constraint|violation".toRegex()) == true) {
             ApiError(HttpStatus.BAD_REQUEST, "Validation error")
         } else if (ex.message?.contains("No property .* found for type".toRegex()) == true) {
             ApiError(HttpStatus.BAD_REQUEST, ex.message)

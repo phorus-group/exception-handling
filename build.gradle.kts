@@ -48,7 +48,7 @@ dependencies {
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.platform:junit-platform-suite:1.10.3")
+    testImplementation("org.junit.platform:junit-platform-suite:1.11.0")
     testImplementation("io.cucumber:cucumber-java:7.18.1")
     testImplementation("io.cucumber:cucumber-junit-platform-engine:7.18.1")
     testImplementation("io.cucumber:cucumber-spring:7.18.1")

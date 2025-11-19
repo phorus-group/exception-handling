@@ -137,23 +137,23 @@ class BaseStepsDefinition(
 
         responseScenarioScope.responseSpec!!
             .expectBody()
-            .jsonPath("$.apierror.validationErrors[0].obj").isEqualTo(obj)
-            .jsonPath("$.apierror.validationErrors[0].field").isEqualTo(field)
+            .jsonPath("$.validationErrors[0].obj").isEqualTo(obj)
+            .jsonPath("$.validationErrors[0].field").isEqualTo(field)
             .let {
                 when (rejectedValue) {
-                    "null" -> it.jsonPath("$.apierror.validationErrors[0].rejectedValue").doesNotExist()
-                    "blank" -> it.jsonPath("$.apierror.validationErrors[0].rejectedValue").isEqualTo("")
-                    "[]" -> it.jsonPath("$.apierror.validationErrors[0].rejectedValue").isEmpty
-                    else -> it.jsonPath("$.apierror.validationErrors[0].rejectedValue").isEqualTo(rejectedValue)
+                    "null" -> it.jsonPath("$.validationErrors[0].rejectedValue").doesNotExist()
+                    "blank" -> it.jsonPath("$.validationErrors[0].rejectedValue").isEqualTo("")
+                    "[]" -> it.jsonPath("$.validationErrors[0].rejectedValue").isEmpty
+                    else -> it.jsonPath("$.validationErrors[0].rejectedValue").isEqualTo(rejectedValue)
                 }
             }
-            .jsonPath("$.apierror.validationErrors[0].message").isEqualTo(message)
+            .jsonPath("$.validationErrors[0].message").isEqualTo(message)
     }
 
     @Then("^the service returns a message with the error (BAD_REQUEST|NOT_FOUND|CONFLICT|UNAUTHORIZED|FORBIDDEN|INTERNAL_SERVER_ERROR)$")
     fun `the service returns a message with the error {string}`(error: String) {
         responseScenarioScope.responseSpec!!
             .expectBody()
-            .jsonPath("$.apierror.status").isEqualTo(error)
+            .jsonPath("$.status").isEqualTo(error)
     }
 }

@@ -1,8 +1,6 @@
 package group.phorus.exception.handling.handlers
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver
 import org.hibernate.validator.internal.engine.path.PathImpl
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
@@ -10,13 +8,6 @@ import org.springframework.validation.ObjectError
 import java.time.LocalDateTime
 import jakarta.validation.ConstraintViolation
 
-@JsonTypeInfo(
-    include = JsonTypeInfo.As.WRAPPER_OBJECT,
-    use = JsonTypeInfo.Id.CUSTOM,
-    property = "error",
-    visible = true
-)
-@JsonTypeIdResolver(LowerCaseClassNameResolver::class)
 data class ApiError(
     val status: HttpStatus,
     val message: String? = null,

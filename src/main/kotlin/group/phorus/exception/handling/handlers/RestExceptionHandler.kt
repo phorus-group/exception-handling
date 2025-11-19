@@ -1,18 +1,23 @@
 package group.phorus.exception.handling.handlers
 
 import group.phorus.exception.handling.BaseException
+import jakarta.validation.ConstraintViolationException
+import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.server.ServerWebInputException
 import java.util.concurrent.TimeoutException
-import jakarta.validation.ConstraintViolationException
 
 
 @RestControllerAdvice
 class RestExceptionHandler {
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @ExceptionHandler(WebExchangeBindException::class)
     protected fun handleMethodArgumentNotValid(ex: WebExchangeBindException): ResponseEntity<Any> =
@@ -35,11 +40,28 @@ class RestExceptionHandler {
                 "could not be converted to type ${ex.requiredType?.simpleName}")
             .let { ResponseEntity(it, it.status) }
 
-    @ExceptionHandler(TimeoutException::class)
-    protected fun handleTimeoutExceptions(ex: TimeoutException): ResponseEntity<Any> =
-        ApiError(HttpStatus.REQUEST_TIMEOUT, ex.message)
+    // Database constraint violations
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    protected fun handleDataIntegrityViolation(ex: DataIntegrityViolationException): ResponseEntity<Any> =
+        ApiError(HttpStatus.CONFLICT, "A conflict with a unique field was found")
             .let { ResponseEntity(it, it.status) }
 
+    // Server web input exceptions
+    @ExceptionHandler(ServerWebInputException::class)
+    protected fun handleServerWebInput(ex: ServerWebInputException): ResponseEntity<Any> =
+        ApiError(HttpStatus.BAD_REQUEST, ex.reason ?: "Invalid input")
+            .let { ResponseEntity(it, it.status) }
+
+    // Response status exceptions
+    @ExceptionHandler(ResponseStatusException::class)
+    protected fun handleResponseStatus(ex: ResponseStatusException): ResponseEntity<Any> =
+        ApiError(ex.statusCode as HttpStatus, ex.reason ?: ex.statusCode.toString())
+            .let { ResponseEntity(it, it.status) }
+
+    @ExceptionHandler(TimeoutException::class)
+    protected fun handleTimeoutExceptions(ex: TimeoutException): ResponseEntity<Any> =
+        ApiError(HttpStatus.REQUEST_TIMEOUT, ex.message ?: "Request timeout")
+            .let { ResponseEntity(it, it.status) }
 
     @ExceptionHandler(BaseException::class)
     protected fun handleBaseExceptions(ex: BaseException): ResponseEntity<Any> =
@@ -48,14 +70,8 @@ class RestExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     protected fun handleOtherExceptions(ex: Exception): ResponseEntity<Any> {
-        val apiError = if (ex.message?.lowercase()?.contains("unique") == true) {
-            ApiError(HttpStatus.CONFLICT, "A conflict with a unique field was found")
-        } else if (ex.message?.lowercase()?.contains("index|unique|constraint|violation".toRegex()) == true) {
-            ApiError(HttpStatus.BAD_REQUEST, "Validation error")
-        } else if (ex.message?.lowercase()?.contains("no property .* found for type".toRegex()) == true) {
-            ApiError(HttpStatus.BAD_REQUEST, ex.message)
-        } else ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: HttpStatus.INTERNAL_SERVER_ERROR.name)
-
-        return ResponseEntity(apiError, apiError.status)
+        logger.error("Unhandled exception: ${ex.javaClass.simpleName} - ${ex.message}", ex)
+        return ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error")
+            .let { ResponseEntity(it, it.status) }
     }
 }

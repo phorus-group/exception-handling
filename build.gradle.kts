@@ -11,14 +11,15 @@ plugins {
     kotlin("plugin.spring") version "2.0.20"
     kotlin("jvm") version "2.0.20"
     id("org.jetbrains.dokka") version "1.9.20"
-    id("com.vanniktech.maven.publish") version "0.28.0"
     id("com.kageiit.jacobo") version "2.1.0"
+    `maven-publish`
+    signing
     jacoco
 }
 
 group = "group.phorus"
 description = "Library containing common Spring WebFlux exception handling logic."
-version = "1.0.14"
+version = "0.0.377"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -29,6 +30,13 @@ java {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "phorus-group/exception-handling"}")
+        credentials {
+            username = project.findProperty("readUsername") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("readPassword") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -63,7 +71,7 @@ tasks {
 
     // Jacoco config
     jacocoTestReport {
-        executionData.setFrom(fileTree(buildDir).include("/jacoco/*.exec"))
+        executionData.setFrom(fileTree(project.layout.buildDirectory).include("/jacoco/*.exec"))
 
         reports {
             xml.required.set(true)
@@ -82,8 +90,8 @@ tasks {
         description = "Transforms jacoco xml report to cobertura"
         group = "verification"
 
-        jacocoReport = file("${layout.buildDirectory.asFile.get()}/reports/jacoco/test/jacocoTestReport.xml")
-        coberturaReport = file("${layout.buildDirectory.asFile.get()}/reports/cobertura/cobertura.xml")
+        jacocoReport = file("${project.layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
+        coberturaReport = file("${project.layout.buildDirectory.get()}/reports/cobertura/cobertura.xml")
         includeFileNames = emptySet()
 
         val field = JacoboTask::class.java.getDeclaredField("srcDirs")
@@ -129,42 +137,64 @@ tasks {
     }
 }
 
-mavenPublishing {
-    coordinates(
-        groupId = project.group.toString(),
-        artifactId = project.name,
-        version = project.version.toString()
-    )
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
 
-    pom {
-        name.set(project.name)
-        description.set(project.description ?: "")
-        url.set(repoUrl)
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
 
-        licenses {
-            license {
-                name.set("The Apache License, Version 2.0")
-                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            pom {
+                name.set(project.name)
+                description.set(project.description ?: "")
+                url.set(repoUrl)
+
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("irios.phorus")
+                        name.set("Martin Rios")
+                        email.set("irios@phorus.group")
+                        organization.set("Phorus Group")
+                        organizationUrl.set("https://phorus.group")
+                    }
+                }
+
+                scm {
+                    url.set(repoUrl)
+                    connection.set("scm:git:$repoUrl.git")
+                    developerConnection.set("scm:git:$repoUrl.git")
+                }
             }
-        }
-
-        developers {
-            developer {
-                id.set("irios.phorus")
-                name.set("Martin Rios")
-                email.set("irios@phorus.group")
-                organization.set("Phorus Group")
-                organizationUrl.set("https://phorus.group")
-            }
-        }
-
-        scm {
-            url.set(repoUrl)
-            connection.set("scm:git:$repoUrl.git")
-            developerConnection.set("scm:git:$repoUrl.git")
         }
     }
 
-    publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "phorus-group/exception-handling"}")
+            credentials {
+                username = project.findProperty("publishUsername") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("publishPassword") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
+
+//signing {
+//    val signingKey = project.findProperty("signingInMemoryKey") as String?
+//    val signingPassword = project.findProperty("signingInMemoryKeyPassword") as String?
+//
+//    if (signingKey != null && signingPassword != null) {
+//        useInMemoryPgpKeys(signingKey, signingPassword)
+//        sign(publishing.publications["maven"])
+//    }
+//}

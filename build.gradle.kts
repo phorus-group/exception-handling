@@ -108,32 +108,34 @@ tasks {
         }
     }
 
-    dokkaHtml.configure {
+    dokka {
         val branch = System.getenv("GITHUB_REF_NAME") ?: "main"
-        dokkaSourceSets {
-            configureEach {
-                reportUndocumented.set(true)
-                platform.set(org.jetbrains.dokka.Platform.jvm)
-                sourceRoot(file("src"))
-                sourceLink {
-                    localDirectory.set(file("src/main/kotlin"))
-                    remoteUrl.set(URI("$repoUrl/tree/$branch/src/main/kotlin").toURL())
-                    remoteLineSuffix.set("#L")
-                }
+        val currentYear = LocalDate.now().year
+
+        dokkaPublications.html {
+            outputDirectory.set(layout.buildDirectory.dir("dokka/html"))
+        }
+
+        dokkaSourceSets.configureEach {
+            reportUndocumented.set(true)
+            jdkVersion.set(java.targetCompatibility.majorVersion.toInt())
+            sourceRoots.from(file("src"))
+
+            sourceLink {
+                localDirectory.set(file("src/main/kotlin"))
+                remoteUrl.set(URI("$repoUrl/tree/$branch/src/main/kotlin"))
+                remoteLineSuffix.set("#L")
             }
         }
-        val currentYear = LocalDate.now().year
-        pluginsMapConfiguration.set(
-            mapOf(
-                "org.jetbrains.dokka.base.DokkaBase" to
-                        """{"footerMessage":"© $currentYear Phorus Group - Licensed under the <a target=\"_blank\" href=\"$repoUrl/blob/$branch/LICENSE\">Apache 2 license</a>."}"""
-            )
-        )
+
+        pluginsConfiguration.html {
+            footerMessage.set("© $currentYear Phorus Group - Licensed under the <a target=\"_blank\" href=\"$repoUrl/blob/$branch/LICENSE\">Apache 2 license</a>.")
+        }
     }
 
     named<Jar>("javadocJar") {
-        from(dokkaHtml)
-        dependsOn(dokkaHtml)
+        from(named("dokkaGeneratePublicationHtml"))
+        dependsOn(named("dokkaGeneratePublicationHtml"))
     }
 }
 

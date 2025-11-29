@@ -1,0 +1,20 @@
+name: "Default Workflow"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types: [opened, edited, synchronize]
+  push:
+    branches:
+      - main
+
+jobs:
+  default-workflow:
+    uses: phorus-group/workflows/.github/workflows/back.lib.gradle.yml@main
+    secrets: inherit
+    with:
+      disable-integration-test: true
+      disable-unit-test: true
+      build-and-test: true

@@ -34,10 +34,9 @@ class TestController {
 
     @PostMapping(path = ["/v1/testFail"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    suspend fun testFail(
-        @RequestBody
-        requests: BaseException, // Cannot be built by jackson, so it'll throw an unhandled exception
-    ): BaseException = requests
+    suspend fun testFail() {
+        throw RuntimeException("Unexpected error")
+    }
 
     @PostMapping(path = ["/v1/testException"], produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)

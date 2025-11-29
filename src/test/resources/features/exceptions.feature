@@ -33,7 +33,6 @@ Feature: Exceptions are handled and a custom message is sent to the client
     And the service returns a message with the error FORBIDDEN
 
   Scenario: Caller with an object that will result in a unexpected exception
-    Given the caller has an object that will result in a unexpected exception
     When the external service calls the "/v1/testFail" endpoint
     Then the service returns HTTP 500
     And the service returns a message with the error INTERNAL_SERVER_ERROR

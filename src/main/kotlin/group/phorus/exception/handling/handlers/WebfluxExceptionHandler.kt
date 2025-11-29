@@ -9,6 +9,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.ServerWebInputException
 import reactor.core.publisher.Mono
 
 @Component
@@ -26,6 +27,9 @@ class WebfluxExceptionHandler(
         val apiError = when (ex) {
             is BaseException ->
                 ApiError(ex.httpStatus, ex.message ?: ex.httpStatus.name)
+
+            is ServerWebInputException ->
+                ApiError(HttpStatus.BAD_REQUEST, ex.reason ?: "Failed to read HTTP message")
 
             is ResponseStatusException ->
                 ApiError(ex.statusCode as HttpStatus, ex.reason ?: "Request failed")

@@ -24,11 +24,6 @@ class BaseStepsDefinition(
         requestScenarioScope.request = exception
     }
 
-    @Given("the caller has an object that will result in a unexpected exception")
-    fun `the caller has an object that will result in a unexpected exception`() {
-        requestScenarioScope.request = BadRequest("")
-    }
-
     @Given("the caller has a normal object")
     fun `the caller has a normal object`() {
         requestScenarioScope.request = TestObject(

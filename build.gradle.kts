@@ -45,6 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework:spring-tx")
+    implementation("ch.qos.logback:logback-core:1.5.19")
 
     // Kotlin
     implementation(kotlin("reflect"))

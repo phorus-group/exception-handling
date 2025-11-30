@@ -21,8 +21,8 @@ jobs:
       metadata-base-url: https://repo1.maven.org/maven2
       metadata-auth-method: none
       registry-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-      secrets:
-        inherit: true
-        pub-auth-value: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-        signing-key: ${{ secrets.SIGNING_KEY }}
-        signing-password: ${{ secrets.SIGNING_PASSWORD }}
+    secrets:
+      inherit: true
+      pub-auth-value: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      signing-key: ${{ secrets.SIGNING_KEY }}
+      signing-password: ${{ secrets.SIGNING_PASSWORD }}

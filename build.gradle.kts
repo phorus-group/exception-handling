@@ -130,9 +130,11 @@ tasks {
         from(named("dokkaGeneratePublicationHtml"))
         dependsOn(named("dokkaGeneratePublicationHtml"))
     }
+}
 
-    named("generateMetadataFileForMavenPublication") {
-        dependsOn(named("javadocJar"))
+afterEvaluate {
+    tasks.named("generateMetadataFileForMavenPublication") {
+        dependsOn("dokkaJavadocJar")
     }
 }
 

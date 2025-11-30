@@ -130,6 +130,10 @@ tasks {
         from(named("dokkaGeneratePublicationHtml"))
         dependsOn(named("dokkaGeneratePublicationHtml"))
     }
+
+    named("generateMetadataFileForMavenPublication") {
+        dependsOn(named("javadocJar"))
+    }
 }
 
 mavenPublishing {

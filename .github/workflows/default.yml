@@ -13,8 +13,16 @@ on:
 jobs:
   default-workflow:
     uses: phorus-group/workflows/.github/workflows/back.lib.gradle.yml@main
-    secrets: inherit
     with:
       disable-integration-test: true
       disable-unit-test: true
       build-and-test: true
+      publish-task: publishToMavenCentral
+      metadata-base-url: https://repo1.maven.org/maven2
+      metadata-auth-method: none
+      registry-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      secrets:
+        inherit: true
+        pub-auth-value: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        signing-key: ${{ secrets.SIGNING_KEY }}
+        signing-password: ${{ secrets.SIGNING_PASSWORD }}

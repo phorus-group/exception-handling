@@ -11,15 +11,14 @@ plugins {
     kotlin("plugin.spring") version "2.2.21"
     kotlin("jvm") version "2.2.21"
     id("org.jetbrains.dokka") version "2.1.0"
+    id("com.vanniktech.maven.publish") version "0.34.0"
     id("com.kageiit.jacobo") version "2.1.0"
-    `maven-publish`
-    signing
     jacoco
 }
 
 group = "group.phorus"
 description = "Library containing common Spring WebFlux exception handling logic."
-version = "0.0.377"
+version = "1.0.13"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -30,13 +29,6 @@ java {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "phorus-group/exception-handling"}")
-        credentials {
-            username = project.findProperty("readUsername") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("readPassword") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
 }
 
 dependencies {
@@ -140,64 +132,42 @@ tasks {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
+mavenPublishing {
+    coordinates(
+        groupId = project.group.toString(),
+        artifactId = project.name,
+        version = project.version.toString()
+    )
 
-            groupId = project.group.toString()
-            artifactId = project.name
-            version = project.version.toString()
+    pom {
+        name.set(project.name)
+        description.set(project.description ?: "")
+        url.set(repoUrl)
 
-            pom {
-                name.set(project.name)
-                description.set(project.description ?: "")
-                url.set(repoUrl)
-
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("irios.phorus")
-                        name.set("Martin Rios")
-                        email.set("irios@phorus.group")
-                        organization.set("Phorus Group")
-                        organizationUrl.set("https://phorus.group")
-                    }
-                }
-
-                scm {
-                    url.set(repoUrl)
-                    connection.set("scm:git:$repoUrl.git")
-                    developerConnection.set("scm:git:$repoUrl.git")
-                }
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
+        }
+
+        developers {
+            developer {
+                id.set("irios.phorus")
+                name.set("Martin Rios")
+                email.set("irios@phorus.group")
+                organization.set("Phorus Group")
+                organizationUrl.set("https://phorus.group")
+            }
+        }
+
+        scm {
+            url.set(repoUrl)
+            connection.set("scm:git:$repoUrl.git")
+            developerConnection.set("scm:git:$repoUrl.git")
         }
     }
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "phorus-group/exception-handling"}")
-            credentials {
-                username = project.findProperty("publishUsername") as String? ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("publishPassword") as String? ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
 }
-
-//signing {
-//    val signingKey = project.findProperty("signingInMemoryKey") as String?
-//    val signingPassword = project.findProperty("signingInMemoryKeyPassword") as String?
-//
-//    if (signingKey != null && signingPassword != null) {
-//        useInMemoryPgpKeys(signingKey, signingPassword)
-//        sign(publishing.publications["maven"])
-//    }
-//}

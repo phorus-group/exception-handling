@@ -20,7 +20,7 @@ jobs:
       publish-task: publishToMavenCentral
       metadata-base-url: https://repo1.maven.org/maven2
       metadata-auth-method: none
-      registry-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      registry-username: ${{ vars.MAVEN_CENTRAL_USERNAME }}
     secrets:
       inherit: true
       pub-auth-value: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

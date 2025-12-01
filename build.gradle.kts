@@ -24,7 +24,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
     withSourcesJar()
-    withJavadocJar()
 }
 
 repositories {
@@ -124,11 +123,6 @@ tasks {
         pluginsConfiguration.html {
             footerMessage.set("© $currentYear Phorus Group - Licensed under the <a target=\"_blank\" href=\"$repoUrl/blob/$branch/LICENSE\">Apache 2 license</a>.")
         }
-    }
-
-    named<Jar>("javadocJar") {
-        from(named("dokkaGeneratePublicationHtml"))
-        dependsOn(named("dokkaGeneratePublicationHtml"))
     }
 }
 

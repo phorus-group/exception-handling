@@ -1,6 +1,8 @@
 package group.phorus.exception.handling.handlers
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.internal.engine.path.PathImpl
 import org.springframework.http.HttpStatus
 import org.springframework.validation.FieldError
@@ -9,13 +11,16 @@ import java.time.LocalDateTime
 import jakarta.validation.ConstraintViolation
 
 data class ApiError(
-    val status: HttpStatus,
+    @get:JsonIgnore val status: HttpStatus,
     val message: String? = null,
     val debugMessage: String? = null,
 ) {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     val timestamp = LocalDateTime.now()
+
+    @get:JsonProperty("status")
+    val statusName: String get() = status.name
 
     var validationErrors: MutableList<ValidationError>? = null
 

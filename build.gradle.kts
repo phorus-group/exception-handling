@@ -6,10 +6,10 @@ import java.net.URI
 import java.time.LocalDate
 
 plugins {
-    id("org.springframework.boot") version "3.5.6"
-    id("io.spring.dependency-management") version "1.1.6"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("jvm") version "2.2.21"
+    id("org.springframework.boot") version "4.0.3"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("plugin.spring") version "2.3.10"
+    kotlin("jvm") version "2.3.10"
     id("org.jetbrains.dokka") version "2.1.0"
     id("com.vanniktech.maven.publish") version "0.34.0"
     id("com.kageiit.jacobo") version "2.1.0"
@@ -18,7 +18,7 @@ plugins {
 
 group = "group.phorus"
 description = "Library containing common Spring WebFlux exception handling logic."
-version = "1.0.14"
+version = "1.1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -33,10 +33,12 @@ repositories {
 dependencies {
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-jackson")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework:spring-tx")
-    implementation("ch.qos.logback:logback-core:1.5.19")
+    // OpenAPI (optional - only active when springdoc is on classpath)
+    compileOnly("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.2")
 
     // Kotlin
     implementation(kotlin("reflect"))
@@ -46,11 +48,12 @@ dependencies {
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.platform:junit-platform-suite:1.11.0")
-    testImplementation("io.cucumber:cucumber-java:7.18.1")
-    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.18.1")
-    testImplementation("io.cucumber:cucumber-spring:7.18.1")
-    testImplementation("junit:junit")
+    testImplementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.2")
+    testImplementation("org.springframework.boot:spring-boot-webtestclient")
+    testImplementation("org.junit.platform:junit-platform-suite")
+    testImplementation("io.cucumber:cucumber-java:7.34.2")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.34.2")
+    testImplementation("io.cucumber:cucumber-spring:7.34.2")
 }
 
 val repoUrl = System.getenv("GITHUB_REPOSITORY")?.let { "https://github.com/$it" }
@@ -169,5 +172,5 @@ mavenPublishing {
     }
 
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+    if (System.getenv("SIGNING_KEY") != null) signAllPublications()
 }

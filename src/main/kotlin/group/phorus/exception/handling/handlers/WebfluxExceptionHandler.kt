@@ -1,21 +1,23 @@
 package group.phorus.exception.handling.handlers
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import group.phorus.exception.handling.BaseException
 import org.slf4j.LoggerFactory
-import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
+import org.springframework.web.server.WebExceptionHandler
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Component
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.core.annotation.Order
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.ServerWebInputException
 import reactor.core.publisher.Mono
 
-@Component
+@AutoConfiguration
+@Order(-2)
 class WebfluxExceptionHandler(
     private val objectMapper: ObjectMapper,
-) : ErrorWebExceptionHandler {
+) : WebExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 

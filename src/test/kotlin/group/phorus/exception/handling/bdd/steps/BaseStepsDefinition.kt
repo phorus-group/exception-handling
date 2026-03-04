@@ -111,9 +111,11 @@ class BaseStepsDefinition(
     fun `when the external service calls the {string} endpoint`(endpoint: String) {
         webTestClient.post()
             .uri { it.path(endpoint).build() }
-            .bodyValue(requestScenarioScope.request!!)
-            .exchange()
-            .let { responseScenarioScope.responseSpec = it }
+        val spec = webTestClient.post()
+            .uri { it.path(endpoint).build() }
+        val request = requestScenarioScope.request
+        val exchangeSpec = if (request != null) spec.bodyValue(request).exchange() else spec.exchange()
+        responseScenarioScope.responseSpec = exchangeSpec
     }
 
 

@@ -175,5 +175,5 @@ mavenPublishing {
     }
 
     publishToMavenCentral(automaticRelease = true)
-    if (System.getenv("SIGNING_KEY") != null) signAllPublications()
+    signAllPublications()
 }

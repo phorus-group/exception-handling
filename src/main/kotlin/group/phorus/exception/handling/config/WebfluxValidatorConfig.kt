@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.boot.validation.MessageInterpolatorFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Role
 import org.springframework.core.*
@@ -18,10 +19,8 @@ import kotlin.reflect.jvm.kotlinFunction
 /**
  * Needed to make the "@Validated" annotation work, used to add support for adding @Valid to collections
  * directly inside a RestController.
- *
- * @see group.phorus.exception.handling.bdd.TestController
  */
-@AutoConfiguration
+@AutoConfiguration(before = [ValidationAutoConfiguration::class])
 class WebfluxValidatorConfig {
     @Primary
     @Bean

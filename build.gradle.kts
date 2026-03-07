@@ -21,7 +21,7 @@ ext["jackson-bom.version"] = "3.1.0"
 
 group = "group.phorus"
 description = "Library containing common Spring WebFlux exception handling logic."
-version = "1.1.2"
+version = "1.1.3"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

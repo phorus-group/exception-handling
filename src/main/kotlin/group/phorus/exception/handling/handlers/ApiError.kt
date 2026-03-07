@@ -14,7 +14,7 @@ import jakarta.validation.ConstraintViolation
  * Standardized error response returned by [RestExceptionHandler] and [WebfluxExceptionHandler].
  *
  * Every exception caught by the handlers is converted to this JSON structure before
- * being sent to the client. This ensures all errors have the same shape regardless of
+ * being sent to the client. This ensures all errors have the same format regardless of
  * where they originated.
  *
  * Example JSON response:

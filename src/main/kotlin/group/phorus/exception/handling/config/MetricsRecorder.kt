@@ -6,7 +6,7 @@ import group.phorus.metrics.commons.countStatus
 import group.phorus.metrics.commons.exceptionTag
 import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.HttpStatus
 
@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus
  * [metrics-commons](https://github.com/phorus-group/metrics-commons).
  *
  * Only active when:
- * - `io.micrometer.core.instrument.MeterRegistry` is on the classpath (e.g. via Spring Boot Actuator)
+ * - A `io.micrometer.core.instrument.MeterRegistry` bean exists (e.g. via Spring Boot Actuator)
  * - The property `phorus.exception-handling.metrics.enabled` is `true` (default)
  *
  * Produces a counter named [MetricNames.HTTP_SERVER_EXCEPTIONS] with tags:
@@ -32,7 +32,7 @@ import org.springframework.http.HttpStatus
  * ```
  */
 @AutoConfiguration
-@ConditionalOnClass(MeterRegistry::class)
+@ConditionalOnBean(MeterRegistry::class)
 @ConditionalOnProperty(
     prefix = "phorus.exception-handling.metrics",
     name = ["enabled"],

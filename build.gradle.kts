@@ -21,7 +21,7 @@ ext["jackson-bom.version"] = "3.1.0"
 
 group = "group.phorus"
 description = "Library containing common Spring WebFlux exception handling logic."
-version = "1.1.1"
+version = "1.1.2"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -40,8 +40,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework:spring-tx")
+
     // OpenAPI (optional - only active when springdoc is on classpath)
     compileOnly("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.2")
+
+    // Phorus
+    implementation("group.phorus:metrics-commons:2.0.2")
 
     // Kotlin
     implementation(kotlin("reflect"))

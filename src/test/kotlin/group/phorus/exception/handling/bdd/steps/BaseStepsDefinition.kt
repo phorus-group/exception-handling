@@ -4,11 +4,13 @@ import group.phorus.exception.handling.bdd.RequestScenarioScope
 import group.phorus.exception.handling.bdd.ResponseScenarioScope
 import group.phorus.exception.handling.bdd.TestObject
 import group.phorus.exception.handling.bdd.TestSubObject
-import group.phorus.exception.handling.BadRequest
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import io.micrometer.core.instrument.MeterRegistry
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -17,9 +19,10 @@ class BaseStepsDefinition(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val requestScenarioScope: RequestScenarioScope,
     @Autowired private val responseScenarioScope: ResponseScenarioScope,
+    @Autowired private val meterRegistry: MeterRegistry,
 ) {
 
-    @Given("^the caller has an object that will result in a (BadRequest|NotFound|Conflict|Unauthorized|Forbidden) exception$")
+    @Given("^the caller has an object that will result in a (BadRequest|NotFound|Conflict|Unauthorized|Forbidden|RequestTimeout|InternalServerError|MethodNotAllowed|TooManyRequests|ServiceUnavailable|BadGateway|GatewayTimeout|UnprocessableEntity|Gone|PreconditionFailed|UnsupportedMediaType) exception$")
     fun `the caller has an object that will result in a {exception} exception`(exception: String) {
         requestScenarioScope.request = exception
     }
@@ -147,10 +150,22 @@ class BaseStepsDefinition(
             .jsonPath("$.validationErrors[0].message").isEqualTo(message)
     }
 
-    @Then("^the service returns a message with the error (BAD_REQUEST|NOT_FOUND|CONFLICT|UNAUTHORIZED|FORBIDDEN|INTERNAL_SERVER_ERROR)$")
+    @Then("^the service returns a message with the error (BAD_REQUEST|NOT_FOUND|CONFLICT|UNAUTHORIZED|FORBIDDEN|REQUEST_TIMEOUT|INTERNAL_SERVER_ERROR|METHOD_NOT_ALLOWED|TOO_MANY_REQUESTS|SERVICE_UNAVAILABLE|BAD_GATEWAY|GATEWAY_TIMEOUT|UNPROCESSABLE_CONTENT|GONE|PRECONDITION_FAILED|UNSUPPORTED_MEDIA_TYPE)$")
     fun `the service returns a message with the error {string}`(error: String) {
         responseScenarioScope.responseSpec!!
             .expectBody()
             .jsonPath("$.status").isEqualTo(error)
+    }
+
+    @Then("the metric {string} is recorded with type {string} and status {int}")
+    fun `the metric is recorded with type and status`(metricName: String, type: String, status: Int) {
+        val counter = meterRegistry.find(metricName)
+            .tag("type", type)
+            .tag("status_code", status.toString())
+            .counter()
+
+        assertNotNull(counter, "Counter '$metricName' with type=$type, status_code=$status should exist")
+        assertTrue(counter!!.count() >= 1.0,
+            "Counter '$metricName' with type=$type, status_code=$status should have been incremented")
     }
 }

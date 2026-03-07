@@ -1,10 +1,12 @@
 package group.phorus.exception.handling.bdd
 
 import io.cucumber.spring.CucumberContextConfiguration
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.context.annotation.Bean
 
 @SpringBootTest(classes = [TestApp::class])
 @CucumberContextConfiguration
@@ -12,4 +14,7 @@ import org.springframework.test.context.ActiveProfiles
 class CucumberSpringConfiguration
 
 @SpringBootApplication(scanBasePackages = ["group.phorus"])
-class TestApp
+class TestApp {
+    @Bean
+    fun meterRegistry(): MeterRegistry = SimpleMeterRegistry()
+}

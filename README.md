@@ -2,7 +2,7 @@
 
 > **DEPRECATED**: This library has been split into:
 >
-> - [`exception-core`](https://github.com/phorus-group/exception-core): Pure Kotlin sealed exception hierarchy (BadRequest, NotFound, Unauthorized, etc.) with HTTP status codes. No Spring dependencies.
+> - [`exception-core`](https://github.com/phorus-group/exception-core): Sealed exception hierarchy (BadRequest, NotFound, Unauthorized, etc.) with HTTP status codes.
 > - [`exception-spring-boot-starter`](https://github.com/phorus-group/exception-spring-boot-starter): Spring Boot autoconfiguration that catches exceptions from controllers and WebFilters, produces structured JSON error responses, and integrates with validation, metrics, and OpenAPI.
 >
 > This library will not receive further updates. Please migrate to the replacements above.

@@ -1,5 +1,12 @@
 # Exception Handling
 
+> **DEPRECATED**: This library has been split into:
+>
+> - [`exception-core`](https://github.com/phorus-group/exception-core): Pure Kotlin sealed exception hierarchy (BadRequest, NotFound, Unauthorized, etc.) with HTTP status codes. No Spring dependencies.
+> - [`exception-spring-boot-starter`](https://github.com/phorus-group/exception-spring-boot-starter): Spring Boot autoconfiguration that catches exceptions from controllers and WebFilters, produces structured JSON error responses, and integrates with validation, metrics, and OpenAPI.
+>
+> This library will not receive further updates. Please migrate to the replacements above.
+
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://img.shields.io/maven-central/v/group.phorus/exception-handling)](https://mvnrepository.com/artifact/group.phorus/exception-handling)
 
